@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script
+	  src="http://code.jquery.com/jquery-3.2.1.min.js"
+	  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+	  crossorigin="anonymous"></script>
+	<style>
+		.gallary-wrap {
+			position: relative;
+			padding: 50px;
+		}
+		.gallary {
+			overflow: hidden;
+			border:1px solid red;
+		}
+		.gallary > div {
+			transition: all 0.5s ease-in;
+		}
+		/*.gallary > div div {
+			float: left;
+		}*/
+		.gallary img {
+		  	display: block;
+		    max-width: 100%;
+		    height: auto;
+		    height: 50px; /*must have if vertical*/
+		    width: 50px;/*must have if horizontal*/
+		}
+		.gallary2 {
+			overflow: hidden;
+			border:1px solid red;
+		}
+		.gallary2 > div {
+			transition: all 0.3s ease-in;
+		}
+		.gallary2 > div div {
+			float: left;
+		}
+		.gallary2 img {
+		  	display: block;
+		    max-width: 100%;
+		    height: auto;
+		    height: 50px; /*must have if vertical*/
+		    width: 50px;/*must have if horizontal*/
+		}
+		.btnPrev, .btnNext {
+			position: absolute;
+			left: 0;
+			top: 0;
+		}
+		.btnPrev.disabled, .btnNext.disabled {
+			color: #ccc;
+			z-index: -1;
+		}
+		.btnNext {
+			right: 0;
+			left: inherit;
+		}
+	</style>
+	<script>
+		$(document).ready(function() {
+		  $(".gallary").simpleSlider({autoslide: true, bigImgClass: 'gallary-big-img' });
+		  $(".gallary2").simpleSlider({scrollDirection: 'vertical', imgSize: 50 });
+		});
+
+		$.fn.simpleSlider = function(settingUser) {
+		let settingDefault = {
+		    autoslide: false,
+		    size: 3,
+		    imgSize: 50,
+		    scrollDirection: 'horizontal', // vertical | horizontal
+		    bigImgClass: false
+		}
+		$(this).each(function(index, el) {
+		let settings = $.extend(settingDefault, settingUser);
+		let prev = '<a class="btnPrev disabled" href="#">Prev</a>';
+		let next = '<a class="btnNext disabled" href="#">Next</a>';
+		let container = $(this);
+		let containerWidth = $(this).width();
+		let containerHeight = $(this).height();
+		let imgSize = settings.imgSize;
+		let imgWidth = $(this).find('div div').width();
+		let imgHeight = $(this).find('div div').height();
+		
+		container.prepend(prev);
+		container.append(next);
+
+		if ($(this).find('div div').length > settings.size) {
+			$('.btnNext').removeClass('disabled');
+		}
+
+		if (settings.scrollDirection == 'vertical') {
+			var margin = 'margin-left';
+			$(container).children('div').width( imgSize * $(container).find('img').length );
+			$(container).width(imgSize * settings.size);
+		} else {
+			var margin = 'margin-top';
+			$(container).height(imgSize * settings.size);
+		}
+
+		$(container).on('click', '.btnPrev', function(event) {
+			event.preventDefault();
+			clearInterval(refreshIntervalId);
+			$(this).parent().find('.btnNext').removeClass('disabled');
+			let tmpPosition = parseInt($(container).children('div').first().css(margin));
+			if (tmpPosition != 0 ) {
+				$(container).children('div').first().css(margin, tmpPosition + imgSize);
+			}
+			if ( Math.abs(parseInt($(container).children('div').first().css(margin))) == imgSize ) {
+				$(this).addClass('disabled');
+			}
+		});
+
+		$(container).on('click', '.btnNext', function(event) {
+			event.preventDefault();
+			clearInterval(refreshIntervalId);
+			$(this).parent().find('.btnPrev').removeClass('disabled');
+			let tmpPosition = parseInt($(container).children('div').first().css(margin));
+			if (settings.scrollDirection == 'vertical') {
+				var maxSize = $(container).find('img').length * imgSize - (imgSize * settings.size);
+			} else {
+				var maxSize = (containerHeight - (imgSize * settings.size));
+			}
+			if ( Math.abs(parseInt($(container).children('div').first().css(margin))) < maxSize ) {
+				$(container).children('div').first().css(margin, tmpPosition - imgSize);
+			}
+			if ( Math.abs(parseInt($(container).children('div').first().css(margin))) >= (maxSize - imgSize) ) {
+				$(this).addClass('disabled');
+			}
+			
+		});
+
+		if (settings.bigImgClass) {
+			$(container).on('click', 'img', function(event) {
+				let getSrc = $(this).attr('src');
+				$(this).parents('.gallary-wrap').find('.'+settings.bigImgClass).attr('src', getSrc);
+			});
+		}
+
+		function autoSlide() {
+				$(container).find('.btnPrev').removeClass('disabled');
+
+				if (settings.scrollDirection == 'vertical') {
+					var maxSize = $(container).find('img').length * imgSize - (imgSize * settings.size);
+				} else {
+					var maxSize = (containerHeight - (imgSize * settings.size));
+				}
+
+				let tmpPosition = parseInt($(container).children('div').first().css(margin));
+				if ( Math.abs(parseInt($(container).children('div').first().css(margin))) < maxSize ) {
+					$(container).children('div').first().css(margin, tmpPosition - imgSize);
+				} else {
+					$(container).children('div').first().css(margin, 0);
+				}
+				if ( Math.abs(parseInt($(container).children('div').first().css(margin))) >= maxSize ) {
+					// $(this).addClass('disabled');
+					$(container).find('.btnPrev').addClass('disabled');
+					console.log($(container))
+				}
+		}
+
+		if (settings.autoslide) {
+			var refreshIntervalId = setInterval(function(){
+				autoSlide()
+			}, 3000);
+		}
+
+	});
+}
+</script>
+</head>
+<body>
+
+
+
+
+	
+
+
+	<div class="gallary-wrap">
+		<img class="gallary-big-img" src="http://photos2.zillow.com/h_g/IS14ngu6sbqlktf.jpg">
+		<div class="gallary">
+			<div>
+				<div><img src="http://photos2.zillow.com/h_g/IS14ngu6sbqlktf.jpg"></div>
+				<div><img src="http://photos2.zillow.com/h_g/IS1gwvslsm8b2qr.jpg"></div>
+				<div><img src="http://photos2.zillow.com/h_g/IS14ngu6sbqlktf.jpg"></div>
+				<div><img src="http://photos2.zillow.com/h_g/IS1gwvslsm8b2qr.jpg"></div>
+				<div><img src="http://photos2.zillow.com/h_g/IS14ngu6sbqlktf.jpg"></div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="gallary-wrap">
+		<div class="gallary2">
+			<div>
+				<div><img src="http://photos2.zillow.com/h_g/IS14ngu6sbqlktf.jpg"></div>
+				<div><img src="http://photos2.zillow.com/h_g/IS1gwvslsm8b2qr.jpg"></div>
+				<div><img src="http://photos2.zillow.com/h_g/IS14ngu6sbqlktf.jpg"></div>
+				<div><img src="http://photos2.zillow.com/h_g/IS1gwvslsm8b2qr.jpg"></div>
+				<div><img src="http://photos2.zillow.com/h_g/IS14ngu6sbqlktf.jpg"></div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+
+</body>
+</html>
