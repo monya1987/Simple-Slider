@@ -1,5 +1,5 @@
 # Simple-Slider
 A very simple jQuery slider.
-
-#Demo
-<a href="https://monya1987.github.io/Simple-Slider/">https://monya1987.github.io/Simple-Slider/</a>
+<hr>  
+<h2>Demo</h2>
+<a href="https://monya1987.github.io/Simple-Slider/simpleSlider.html">https://monya1987.github.io/Simple-Slider/simpleSlider.html</a>
