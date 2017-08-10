@@ -44,10 +44,16 @@ A very simple jQuery slider.
 	</tr>
 </table>
 <hr>
-<h2>Initialize</h2>
+<h2>Initialize with</h2>
 <pre>
 $(document).ready(function() {
-		  $(".gallary").simpleSlider({autoslide: true, bigImgClass: 'gallary-big-img' });
-		  $(".gallary2").simpleSlider({scrollDirection: 'vertical', imgSize: 50 });
-		});
+	$(".gallary").simpleSlider({autoslide: true, bigImgClass: 'gallary-big-img' });
+	$(".gallary2").simpleSlider({scrollDirection: 'vertical', imgSize: 50 });
+});
 </pre>
+<hr>
+<h2>Browser support</h2>
+<p>works on IE8+ in addition to other modern browsers such as Chrome, Firefox, and Safari.</p>
+<br>
+<h2>Dependencies</h2>
+<p>jQuery 1.7</p>
