@@ -43,3 +43,11 @@ A very simple jQuery slider.
 		<td>Set css class where to show big img.</td>
 	</tr>
 </table>
+<hr>
+<h2>Initialize</h2>
+<pre>
+$(document).ready(function() {
+		  $(".gallary").simpleSlider({autoslide: true, bigImgClass: 'gallary-big-img' });
+		  $(".gallary2").simpleSlider({scrollDirection: 'vertical', imgSize: 50 });
+		});
+</pre>
